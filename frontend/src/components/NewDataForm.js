@@ -8,7 +8,8 @@ import { API_URL } from "../constants";
 class NewDataForm extends React.Component {
   state = {
     pk: 0,
-    data: ""
+    data: "",
+    additionalInputs: [],
   };
 
   componentDidMount() {
@@ -18,8 +19,14 @@ class NewDataForm extends React.Component {
     }
   }
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  onChange = (e, index) => {
+    if (index === undefined) {
+      this.setState({ [e.target.name]: e.target.value });
+    } else {
+      const additionalInputs = [...this.state.additionalInputs];
+      additionalInputs[index] = { ...additionalInputs[index], [e.target.name]: e.target.value };
+      this.setState({ additionalInputs });
+    }
   };
 
   createData = e => {
@@ -38,14 +45,16 @@ class NewDataForm extends React.Component {
     });
   };
 
-  defaultIfEmpty = value => {
+  addAdditionalInput = () => {
+    this.setState((prevState) => ({
+      additionalInputs: [...prevState.additionalInputs, { additionalData: "" }],
+    }));
+  };
+
+  defaultIfEmpty = (value) => {
     return value === "" ? "" : value;
   };
 
-  generateForm = () => {
-    
-  }
- 
   render() {
     return (
       <Form onSubmit={this.props.data ? this.editData : this.createData}>
@@ -57,6 +66,19 @@ class NewDataForm extends React.Component {
             onChange={this.onChange}
             value={this.defaultIfEmpty(this.state.data)}
           />
+          {this.state.additionalInputs.map((input, index) => (
+            <>
+              <Label for="data">Data {index+1}:</Label>
+              <Input
+                key={index}
+                type="text"
+                name="additionalData"
+                onChange={(e) => this.onChange(e, index)}
+                value={this.defaultIfEmpty(input.additionalData)}
+                />
+              </>
+          ))}
+          <Button onClick={this.addAdditionalInput}>+</Button>
         </FormGroup>
         <Button>Send</Button>
       </Form>
