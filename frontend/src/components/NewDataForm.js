@@ -42,6 +42,10 @@ class NewDataForm extends React.Component {
     return value === "" ? "" : value;
   };
 
+  generateForm = () => {
+    
+  }
+ 
   render() {
     return (
       <Form onSubmit={this.props.data ? this.editData : this.createData}>
