@@ -9,7 +9,7 @@ class NewDataForm extends React.Component {
   state = {
     pk: 0,
     data: "",
-    additionalInputs: [],
+    additionalInputs: [{}],
   };
 
   componentDidMount() {
@@ -31,10 +31,18 @@ class NewDataForm extends React.Component {
 
   createData = e => {
     e.preventDefault();
-    axios.post(API_URL, this.state).then(() => {
-      this.props.resetState();
-      this.props.toggle();
+
+    this.state.additionalInputs.forEach(element => {
+      const payload = {
+        pk: 0,
+        data: element.additionalData
+      }
+
+      axios.post(API_URL, payload).then(() => {
+        this.props.resetState();
+      });
     });
+    this.props.toggle();
   };
 
   editData = e => {
@@ -59,16 +67,9 @@ class NewDataForm extends React.Component {
     return (
       <Form onSubmit={this.props.data ? this.editData : this.createData}>
         <FormGroup>
-          <Label for="data">Data:</Label>
-          <Input
-            type="text"
-            name="data"
-            onChange={this.onChange}
-            value={this.defaultIfEmpty(this.state.data)}
-          />
           {this.state.additionalInputs.map((input, index) => (
-            <>
-              <Label for="data">Data {index+1}:</Label>
+            <div key={index}>
+              <Label for="data">Data {index + 1}:</Label>
               <Input
                 key={index}
                 type="text"
@@ -76,9 +77,9 @@ class NewDataForm extends React.Component {
                 onChange={(e) => this.onChange(e, index)}
                 value={this.defaultIfEmpty(input.additionalData)}
                 />
-              </>
+            </div>
           ))}
-          <Button onClick={this.addAdditionalInput}>+</Button>
+          <Button onClick={this.addAdditionalInput} style={{marginTop: "1rem"}}>+</Button>
         </FormGroup>
         <Button>Send</Button>
       </Form>
