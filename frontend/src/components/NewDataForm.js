@@ -30,31 +30,31 @@ class NewDataForm extends React.Component {
   };
 
   isValidMail = (mail) => {
-      const regex = /\S+@\S+\.\S+/;
-      console.log(regex.test(mail));
-      return regex.test(mail)
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(mail)
   }
 
   createData = e => {
     e.preventDefault();
-    
+  
     this.state.additionalInputs.forEach(element => {
       const payload = {
         pk: 0,
         data: element.additionalData
-      }
-
-        if(this.isValidMail(payload.data)){
-      axios.post(API_URL, payload).then(() => {
-        this.props.resetState();
-      this.props.toggle();})}
-      else{
-        
       };
-
-    }
-    );
+  
+      if (this.isValidMail(payload.data)) {
+        axios.post(API_URL, payload).then(() => {
+          this.props.resetState();
+        });
+      } else {
+        alert("Zly mail");
+      }
+  
+      this.props.toggle();
+    });
   };
+  
 
   editData = e => {
     e.preventDefault();
@@ -80,7 +80,7 @@ class NewDataForm extends React.Component {
         <FormGroup>
           {this.state.additionalInputs.map((input, index) => (
             <div key={index}>
-              <Label for="data">Data {index + 1}:</Label>
+              <Label for="data">Email: {index + 1}:</Label>
               <Input
                 key={index}
                 type="text"
