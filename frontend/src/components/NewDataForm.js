@@ -29,20 +29,31 @@ class NewDataForm extends React.Component {
     }
   };
 
+  isValidMail = (mail) => {
+      const regex = /\S+@\S+\.\S+/;
+      console.log(regex.test(mail));
+      return regex.test(mail)
+  }
+
   createData = e => {
     e.preventDefault();
-
+    
     this.state.additionalInputs.forEach(element => {
       const payload = {
         pk: 0,
         data: element.additionalData
       }
 
+        if(this.isValidMail(payload.data)){
       axios.post(API_URL, payload).then(() => {
         this.props.resetState();
-      });
-    });
-    this.props.toggle();
+      this.props.toggle();})}
+      else{
+        
+      };
+
+    }
+    );
   };
 
   editData = e => {
