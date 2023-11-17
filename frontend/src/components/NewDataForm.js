@@ -37,7 +37,7 @@ class NewDataForm extends React.Component {
   createData = e => {
     e.preventDefault();
   
-    this.state.additionalInputs.forEach(element => {
+    this.state.additionalInputs.forEach((element, i) => {
       const payload = {
         pk: 0,
         data: element.additionalData
@@ -48,7 +48,7 @@ class NewDataForm extends React.Component {
           this.props.resetState();
         });
       } else {
-        alert("Zly mail");
+        alert(`Email nr: ${i + 1} jest nieprawidlowy`);
       }
   
       this.props.toggle();
